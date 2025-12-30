@@ -10,105 +10,100 @@ canvas{position:fixed;top:0;left:0;}
 </style>
 </head>
 <body>
-
 <div class="loading" id="loading">LOADING EXPERIENCE...</div>
-
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/geometries/TextGeometry.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/FontLoader.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js"></script>
 <script>
-/* ===================== SCENE ===================== */
+// ======== SCENE ========
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x020005, 3, 30);
+scene.fog = new THREE.Fog(0x020005,3,30);
 
-/* ===================== CAMERA ===================== */
-const camera = new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,100);
+// ======== CAMERA ========
+const camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,100);
 camera.position.set(0,1.5,6);
 
-/* ===================== RENDERER ===================== */
+// ======== RENDERER ========
 const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
+renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 document.body.appendChild(renderer.domElement);
 
-/* ===================== LIGHTS ===================== */
+// ======== LIGHTS ========
 scene.add(new THREE.AmbientLight(0x440066,0.7));
 const neon1 = new THREE.PointLight(0xff00ff,2,20); neon1.position.set(-3,3,2); scene.add(neon1);
 const neon2 = new THREE.PointLight(0x00ccff,2,20); neon2.position.set(3,3,2); scene.add(neon2);
 
-/* ===================== FLOOR & WALL ===================== */
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(40,40),
-  new THREE.MeshStandardMaterial({color:0x080010, roughness:0.8, metalness:0.5})
-);
+// ======== FLOOR ========
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:0x080010,roughness:0.8,metalness:0.5}));
 floor.rotation.x=-Math.PI/2; floor.position.y=0; scene.add(floor);
 
-const wall = new THREE.Mesh(
-  new THREE.BoxGeometry(40,10,0.2),
-  new THREE.MeshStandardMaterial({color:0x050008, roughness:0.9, metalness:0.6})
-);
-wall.position.set(0,5,-10); scene.add(wall);
-
-/* ===================== HOLOGRAM BOXES ===================== */
+// ======== HOLOGRAM BOXES ========
 const boxes=[];
 for(let i=0;i<6;i++){
-  const b = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,0.2),
-    new THREE.MeshStandardMaterial({color:0xaa55ff, emissive:0xaa55ff, emissiveIntensity:0.8, metalness:0.7})
-  );
+  const b = new THREE.Mesh(new THREE.BoxGeometry(1,1,0.2), new THREE.MeshStandardMaterial({color:0xaa55ff,emissive:0xaa55ff,emissiveIntensity:0.8,metalness:0.7}));
   b.position.set(-2+i*1.4,2+Math.sin(i)*0.2,-5);
   boxes.push(b); scene.add(b);
 }
 
-/* ===================== NEON TEXT ===================== */
-const loader = new THREE.FontLoader();
-loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font){
-  const texts = [
-    {text:"Shiva Tyagi", pos:[-2,3,-4]},
-    {text:"Developer", pos:[-2,2.5,-4]},
-    {text:"Projects", pos:[-4,3,-8]},
-    {text:"Skills", pos:[2,3,-8]}
-  ];
-  texts.forEach(t=>{
-    const geometry = new THREE.TextGeometry(t.text,{font:font,size:0.4,height:0.05});
-    const material = new THREE.MeshStandardMaterial({color:0x00ffff,emissive:0x00ffff,emissiveIntensity:1});
-    const mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(...t.pos);
-    scene.add(mesh);
-  });
-});
-
-/* ===================== SCROLL-BASED CAMERA ===================== */
-function cameraPath(t){
-  return { x: Math.sin(t*Math.PI*2)*1.2, y:1.5+t*1.2, z:6-t*12 };
+// ======== PARTICLES ========
+const particles=[];
+for(let i=0;i<50;i++){
+  const p = new THREE.Mesh(new THREE.SphereGeometry(0.03,6,6), new THREE.MeshStandardMaterial({color:0xff44ff,emissive:0xff44ff,emissiveIntensity:0.7}));
+  p.position.set((Math.random()-0.5)*10,Math.random()*5,Math.random()*-10);
+  particles.push(p); scene.add(p);
 }
 
-/* ===================== ANIMATE ===================== */
+// ======== PANELS (using simple colored planes) ========
+let panels = {};
+["projects","skills","about"].forEach((type,i)=>{
+  const group = new THREE.Group();
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(2,1), new THREE.MeshStandardMaterial({color:0x000000,emissive:0x00ffff,emissiveIntensity:0.5,opacity:0.6,transparent:true}));
+  group.add(plane);
+  group.position.set(i*3-3,2,-5);
+  group.visible=false;
+  scene.add(group);
+  panels[type]=group;
+});
+
+// ======== HOTSPOT INTERACTION ========
+let hotspotObjects = [];
+for(let i=0;i<3;i++){
+  const obj = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.2,0.1), new THREE.MeshStandardMaterial({color:0x00ffff}));
+  obj.position.set(i*3-3,3,-5);
+  obj.userData.type = ["projects","skills","about"][i];
+  scene.add(obj);
+  hotspotObjects.push(obj);
+}
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+window.addEventListener("click",(e)=>{
+  mouse.x = (e.clientX/window.innerWidth)*2-1;
+  mouse.y = -(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const intersects = raycaster.intersectObjects(hotspotObjects);
+  Object.values(panels).forEach(p=>p.visible=false);
+  if(intersects.length>0){
+    panels[intersects[0].object.userData.type].visible=true;
+  }
+});
+
+// ======== ANIMATE ========
 function animate(){
   requestAnimationFrame(animate);
   boxes.forEach((b,i)=>b.position.y=2+Math.sin(Date.now()*0.002+i)*0.2);
-
-  const scrollY = window.scrollY;
-  const maxScroll = document.body.scrollHeight - innerHeight;
-  const progress = Math.min(scrollY/maxScroll,1);
-
-  const p = cameraPath(progress);
-  camera.position.set(p.x,p.y,p.z);
-  camera.lookAt(0,1.5,0);
-
+  particles.forEach((p,i)=>p.position.y+=Math.sin(Date.now()*0.002+i)*0.002);
   renderer.render(scene,camera);
   document.getElementById("loading").style.display="none";
 }
 animate();
 
-/* ===================== RESIZE ===================== */
+// ======== RESIZE ========
 window.addEventListener("resize",()=>{
-  camera.aspect = innerWidth/innerHeight;
+  camera.aspect=window.innerWidth/window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
+  renderer.setSize(window.innerWidth,window.innerHeight);
 });
 </script>
-
 </body>
 </html>
