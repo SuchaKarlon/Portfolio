@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Shiva Tyagi | 3D Portfolio</title>
+
+<style>
+html,body{
+  margin:0;
+  height:400vh; /* enables scroll animation */
+  background:#020005;
+  overflow-x:hidden;
+}
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+}
+.loading{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-family:Arial;
+  letter-spacing:2px;
+  background:#020005;
+  z-index:10;
+}
+</style>
+</head>
+
+<body>
+
+<div class="loading" id="loading">LOADING EXPERIENCE...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
+
+<script>
+/* ===================== SCENE ===================== */
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x020005, 6, 30);
+
+/* ===================== CAMERA ===================== */
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(0,1.6,6);
+
+/* ===================== RENDERER ===================== */
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+/* ===================== LIGHTING ===================== */
+scene.add(new THREE.AmbientLight(0x440066,0.7));
+
+const neon1 = new THREE.PointLight(0xff00ff,2,20);
+neon1.position.set(-4,3,2);
+scene.add(neon1);
+
+const neon2 = new THREE.PointLight(0x00ccff,2,20);
+neon2.position.set(4,3,2);
+scene.add(neon2);
+
+/* ===================== LOAD REAL 3D ROOM ===================== */
+let room;
+const loader = new THREE.GLTFLoader();
+loader.load(
+  'Cyberroom__scifi.glb',
+  gltf=>{
+    room = gltf.scene;
+    room.scale.set(1,1,1);
+    room.traverse(o=>{
+      if(o.isMesh){
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
+    });
+    scene.add(room);
+    document.getElementById("loading").style.display="none";
+  }
+);
+
+/* ===================== CINEMATIC CAMERA PATH ===================== */
+function cameraPath(t){
+  return {
+    x: Math.sin(t*Math.PI*2)*1.2,
+    y: 1.6 + t*0.6,
+    z: 6 - t*8
+  };
+}
+
+/* ===================== SCROLL CONTROL ===================== */
+function animate(){
+  requestAnimationFrame(animate);
+
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - innerHeight;
+  const progress = Math.min(scrollY / maxScroll, 1);
+
+  const p = cameraPath(progress);
+  camera.position.set(p.x, p.y, p.z);
+  camera.lookAt(0,1.4,0);
+
+  renderer.render(scene,camera);
+}
+animate();
+
+/* ===================== RESIZE ===================== */
+addEventListener("resize",()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+
+</body>
+</html>
