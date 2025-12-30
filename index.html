@@ -1,117 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Shiva Tyagi | 3D Portfolio</title>
-
 <style>
-html,body{
-  margin:0;
-  height:400vh; /* enables scroll animation */
-  background:#020005;
-  overflow-x:hidden;
-}
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-}
-.loading{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-family:Arial;
-  letter-spacing:2px;
-  background:#020005;
-  z-index:10;
-}
+html,body{margin:0;overflow:hidden;background:#020005;height:500vh;}
+canvas{position:fixed;top:0;left:0;}
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Arial;letter-spacing:2px;z-index:10;}
 </style>
 </head>
-
 <body>
 
 <div class="loading" id="loading">LOADING EXPERIENCE...</div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/geometries/TextGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/FontLoader.js"></script>
 
 <script>
 /* ===================== SCENE ===================== */
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x020005, 6, 30);
+scene.fog = new THREE.Fog(0x020005, 3, 30);
 
 /* ===================== CAMERA ===================== */
-const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
-camera.position.set(0,1.6,6);
+const camera = new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,100);
+camera.position.set(0,1.5,6);
 
 /* ===================== RENDERER ===================== */
 const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth, innerHeight);
+renderer.setSize(innerWidth,innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-/* ===================== LIGHTING ===================== */
+/* ===================== LIGHTS ===================== */
 scene.add(new THREE.AmbientLight(0x440066,0.7));
+const neon1 = new THREE.PointLight(0xff00ff,2,20); neon1.position.set(-3,3,2); scene.add(neon1);
+const neon2 = new THREE.PointLight(0x00ccff,2,20); neon2.position.set(3,3,2); scene.add(neon2);
 
-const neon1 = new THREE.PointLight(0xff00ff,2,20);
-neon1.position.set(-4,3,2);
-scene.add(neon1);
-
-const neon2 = new THREE.PointLight(0x00ccff,2,20);
-neon2.position.set(4,3,2);
-scene.add(neon2);
-
-/* ===================== LOAD REAL 3D ROOM ===================== */
-let room;
-const loader = new THREE.GLTFLoader();
-loader.load(
-  'room.glb',
-  gltf=>{
-    room = gltf.scene;
-    room.scale.set(1,1,1);
-    room.traverse(o=>{
-      if(o.isMesh){
-        o.castShadow = true;
-        o.receiveShadow = true;
-      }
-    });
-    scene.add(room);
-    document.getElementById("loading").style.display="none";
-  }
+/* ===================== FLOOR & WALL ===================== */
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(40,40),
+  new THREE.MeshStandardMaterial({color:0x080010, roughness:0.8, metalness:0.5})
 );
+floor.rotation.x=-Math.PI/2; floor.position.y=0; scene.add(floor);
 
-/* ===================== CINEMATIC CAMERA PATH ===================== */
-function cameraPath(t){
-  return {
-    x: Math.sin(t*Math.PI*2)*1.2,
-    y: 1.6 + t*0.6,
-    z: 6 - t*8
-  };
+const wall = new THREE.Mesh(
+  new THREE.BoxGeometry(40,10,0.2),
+  new THREE.MeshStandardMaterial({color:0x050008, roughness:0.9, metalness:0.6})
+);
+wall.position.set(0,5,-10); scene.add(wall);
+
+/* ===================== HOLOGRAM BOXES ===================== */
+const boxes=[];
+for(let i=0;i<6;i++){
+  const b = new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,0.2),
+    new THREE.MeshStandardMaterial({color:0xaa55ff, emissive:0xaa55ff, emissiveIntensity:0.8, metalness:0.7})
+  );
+  b.position.set(-2+i*1.4,2+Math.sin(i)*0.2,-5);
+  boxes.push(b); scene.add(b);
 }
 
-/* ===================== SCROLL CONTROL ===================== */
+/* ===================== NEON TEXT ===================== */
+const loader = new THREE.FontLoader();
+loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font){
+  const texts = [
+    {text:"Shiva Tyagi", pos:[-2,3,-4]},
+    {text:"Developer", pos:[-2,2.5,-4]},
+    {text:"Projects", pos:[-4,3,-8]},
+    {text:"Skills", pos:[2,3,-8]}
+  ];
+  texts.forEach(t=>{
+    const geometry = new THREE.TextGeometry(t.text,{font:font,size:0.4,height:0.05});
+    const material = new THREE.MeshStandardMaterial({color:0x00ffff,emissive:0x00ffff,emissiveIntensity:1});
+    const mesh = new THREE.Mesh(geometry,material);
+    mesh.position.set(...t.pos);
+    scene.add(mesh);
+  });
+});
+
+/* ===================== SCROLL-BASED CAMERA ===================== */
+function cameraPath(t){
+  return { x: Math.sin(t*Math.PI*2)*1.2, y:1.5+t*1.2, z:6-t*12 };
+}
+
+/* ===================== ANIMATE ===================== */
 function animate(){
   requestAnimationFrame(animate);
+  boxes.forEach((b,i)=>b.position.y=2+Math.sin(Date.now()*0.002+i)*0.2);
 
   const scrollY = window.scrollY;
   const maxScroll = document.body.scrollHeight - innerHeight;
-  const progress = Math.min(scrollY / maxScroll, 1);
+  const progress = Math.min(scrollY/maxScroll,1);
 
   const p = cameraPath(progress);
-  camera.position.set(p.x, p.y, p.z);
-  camera.lookAt(0,1.4,0);
+  camera.position.set(p.x,p.y,p.z);
+  camera.lookAt(0,1.5,0);
 
   renderer.render(scene,camera);
+  document.getElementById("loading").style.display="none";
 }
 animate();
 
 /* ===================== RESIZE ===================== */
-addEventListener("resize",()=>{
+window.addEventListener("resize",()=>{
   camera.aspect = innerWidth/innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
