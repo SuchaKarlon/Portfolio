@@ -3,225 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Portfolio Concept</title>
+    <title>Anonyms | Interactive Particles</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- RESET & BASICS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- BASE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #000;
+            color: #fff;
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Prevents scrolling to maintain the "App" feel */
+            overflow: hidden;
             position: relative;
         }
 
-        /* --- UTILITIES --- */
-        .text-red {
-            color: #ff003c;
-        }
+        .text-red { color: #ff003c; }
 
-        /* --- LAYOUT GRID --- */
-        /* We use absolute positioning to pin elements to the corners, typical of this brutalist style */
+        /* --- UI ELEMENTS --- */
+        .logo-container { position: absolute; top: 40px; left: 50px; display: flex; align-items: center; gap: 15px; z-index: 10; }
+        .logo-icon { width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 800; position: relative; }
+        .logo-icon::after { content: ''; position: absolute; width: 120%; height: 1px; background: white; transform: rotate(-45deg); }
+        .logo-text { font-size: 0.9rem; letter-spacing: 2px; font-weight: 600; }
 
-        /* 1. TOP LEFT: LOGO */
-        .logo-container {
-            position: absolute;
-            top: 40px;
-            left: 50px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 10;
-        }
+        .top-name { position: absolute; top: 100px; right: 150px; z-index: 10; }
+        .top-name h1 { font-weight: 400; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; color: #dcdcdc; }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            position: relative;
-        }
-        
-        /* The decorative line through the logo */
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 120%;
-            height: 1px;
-            background: white;
-            transform: rotate(-45deg);
-        }
+        .side-nav { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 60px; z-index: 10; }
+        .nav-link { text-decoration: none; color: white; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); cursor: pointer; transition: 0.3s; }
+        .nav-link:hover { color: #ff003c; }
 
-        .logo-text {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
+        .role-container { position: absolute; bottom: 40px; left: 50px; z-index: 10; }
+        .role-title { font-size: 1.2rem; font-weight: 700; }
+        .role-sub { font-size: 0.9rem; color: #888; }
 
-        /* 2. TOP RIGHT: NAME */
-        .top-name {
-            position: absolute;
-            top: 100px;
-            right: 150px; /* Indented slightly from the nav */
-            text-align: left;
-            z-index: 10;
-        }
+        .socials { position: absolute; bottom: 40px; right: 50px; display: flex; gap: 25px; z-index: 10; }
+        .socials i { font-size: 1.1rem; color: white; cursor: pointer; transition: 0.3s; }
+        .socials i:first-child, .socials i:hover { color: #ff003c; }
 
-        .top-name h1 {
-            font-weight: 400;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            line-height: 1.5;
-            color: #dcdcdc;
-            text-transform: uppercase;
-        }
-
-        /* 3. RIGHT SIDE: NAVIGATION */
-        .side-nav {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 60px;
-            z-index: 10;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: white;
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            /* Rotate text 90 degrees */
-            writing-mode: vertical-rl;
-            transform: rotate(180deg); 
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-link:hover {
-            color: #ff003c;
-        }
-
-        /* 4. BOTTOM LEFT: ROLE */
-        .role-container {
-            position: absolute;
-            bottom: 40px;
-            left: 50px;
-            z-index: 10;
-        }
-
-        .role-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .role-sub {
-            font-size: 0.9rem;
-            color: #888;
-            font-weight: 600;
-        }
-
-        /* 5. BOTTOM RIGHT: SOCIALS */
-        .socials {
-            position: absolute;
-            bottom: 40px;
-            right: 50px;
-            display: flex;
-            gap: 25px;
-            z-index: 10;
-        }
-
-        .socials i {
-            font-size: 1.2rem;
-            color: white; /* Default white */
-            cursor: pointer;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
-
-        /* Make the Twitter icon red by default as per design, others on hover */
-        .socials i:first-child, 
-        .socials i:hover {
-            color: #ff003c;
-        }
-        
-        .socials i:hover {
-            transform: translateY(-3px);
-        }
-
-        /* --- CENTER STAGE --- */
+        /* --- PARTICLE CANVAS & RING --- */
         .center-stage {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
+            width: 500px;
+            height: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1; /* Behind UI elements */
-        }
-
-        /* The Red Glowing Ring */
-        .glow-ring {
-            position: absolute;
-            width: 450px;
-            height: 450px;
-            border: 25px solid #ff003c; /* Thickness of ring */
-            border-radius: 50%;
-            box-shadow: 0 0 60px rgba(255, 0, 60, 0.4); /* Glow effect */
             z-index: 1;
         }
 
-        /* The Figure Image */
-        .hero-image {
-            position: relative;
-            z-index: 2; /* Sits on top of the ring */
-            height: 110%; /* Slightly larger to break the circle bounds */
-            width: auto;
-            object-fit: contain;
-            filter: grayscale(100%) contrast(1.2); /* Makes image match the moody style */
-            /* Optional: Add a subtle drop shadow to separate from background */
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)) grayscale(100%);
+        /* The Glow Ring */
+        .glow-ring {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border: 15px solid #ff003c;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 0, 60, 0.3);
+            pointer-events: none; /* Mouse passes through to canvas */
+            z-index: 2;
         }
 
-        /* --- RESPONSIVE ADJUSTMENTS --- */
-        @media (max-width: 768px) {
-            .side-nav {
-                right: 20px;
-                gap: 30px;
-            }
-            .glow-ring {
-                width: 300px;
-                height: 300px;
-                border-width: 15px;
-            }
-            .hero-image {
-                height: 350px;
-            }
-            .top-name {
-                top: 100px;
-                right: 20px;
-            }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
     </style>
 </head>
@@ -236,18 +88,15 @@
         <h1>Shiva<br>Tyagi</h1>
     </div>
 
-    <div class="center-stage">
+    <div class="center-stage" id="container">
         <div class="glow-ring"></div>
-        
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3" 
-             alt="Center Figure" 
-             class="hero-image">
+        <canvas id="particleCanvas"></canvas>
     </div>
 
     <nav class="side-nav">
-        <a href="#" class="nav-link">About</a>
-        <a href="#" class="nav-link">Projects</a>
-        <a href="#" class="nav-link">Contact</a>
+        <a class="nav-link">About</a>
+        <a class="nav-link">Projects</a>
+        <a class="nav-link">Contact</a>
     </nav>
 
     <div class="role-container">
@@ -262,5 +111,103 @@
         <i class="fab fa-behance"></i>
     </div>
 
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('container');
+
+        canvas.width = 500;
+        canvas.height = 500;
+
+        let particlesArray = [];
+        const numberOfParticles = 120; // Density of dust
+        const mouse = { x: null, y: null, radius: 80 };
+
+        window.addEventListener('mousemove', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = event.clientX - rect.left;
+            mouse.y = event.clientY - rect.top;
+        });
+
+        class Particle {
+            constructor() {
+                // Initialize particles randomly inside the circle
+                this.reset();
+            }
+
+            reset() {
+                // Random angle and distance within the circle
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 180; // Keep slightly inside the 200px ring radius
+                this.x = 250 + Math.cos(angle) * radius;
+                this.y = 250 + Math.sin(angle) * radius;
+                
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.size = Math.random() * 2 + 1;
+                this.density = (Math.random() * 30) + 1;
+                this.color = '#ff003c';
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].draw();
+                particlesArray[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Reset mouse when it leaves the canvas area
+        container.addEventListener('mouseleave', function(){
+            mouse.x = null;
+            mouse.y = null;
+        });
+    </script>
 </body>
 </html>
