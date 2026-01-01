@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonyms | Interactive Particles</title>
+    <title>Anonyms | Interactive Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- BASE STYLES --- */
+        /* --- RESET & LAYOUT --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #000;
@@ -40,10 +40,21 @@
         .role-sub { font-size: 0.9rem; color: #888; }
 
         .socials { position: absolute; bottom: 40px; right: 50px; display: flex; gap: 25px; z-index: 10; }
-        .socials i { font-size: 1.1rem; color: white; cursor: pointer; transition: 0.3s; }
-        .socials i:first-child, .socials i:hover { color: #ff003c; }
+        .socials i { 
+            font-size: 1.1rem; 
+            color: white; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        /* Glowing Social Icons Hover */
+        .socials i:hover { 
+            color: #ff003c; 
+            transform: translateY(-5px);
+            text-shadow: 0 0 15px #ff003c;
+        }
+        .socials i:first-child { color: #ff003c; }
 
-        /* --- PARTICLE CANVAS & RING --- */
+        /* --- CENTER STAGE --- */
         .center-stage {
             position: absolute;
             top: 50%;
@@ -57,16 +68,24 @@
             z-index: 1;
         }
 
-        /* The Glow Ring */
+        /* Rotating Glowing Ring */
         .glow-ring {
             position: absolute;
             width: 400px;
             height: 400px;
-            border: 15px solid #ff003c;
+            border: 12px solid rgba(255, 0, 60, 0.1); 
+            border-top: 12px solid #ff003c; /* Visible segment for rotation */
+            border-bottom: 12px solid #ff003c; 
             border-radius: 50%;
             box-shadow: 0 0 50px rgba(255, 0, 60, 0.3);
-            pointer-events: none; /* Mouse passes through to canvas */
+            pointer-events: none; 
             z-index: 2;
+            animation: rotateRing 10s linear infinite;
+        }
+
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         canvas {
@@ -120,37 +139,59 @@
         canvas.height = 500;
 
         let particlesArray = [];
-        const numberOfParticles = 120; // Density of dust
-        const mouse = { x: null, y: null, radius: 80 };
+        const numberOfParticles = 150; 
+        const mouse = { x: null, y: null, radius: 90 };
 
+        // Handle Mouse Move
         window.addEventListener('mousemove', function(event) {
             const rect = canvas.getBoundingClientRect();
             mouse.x = event.clientX - rect.left;
             mouse.y = event.clientY - rect.top;
         });
 
+        // Handle Click Burst
+        window.addEventListener('mousedown', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickY = event.clientY - rect.top;
+
+            // Add 25 explosion particles
+            for (let i = 0; i < 25; i++) {
+                particlesArray.push(new Particle(clickX, clickY, true));
+            }
+        });
+
         class Particle {
-            constructor() {
-                // Initialize particles randomly inside the circle
-                this.reset();
+            constructor(x, y, isBurst = false) {
+                if (isBurst) {
+                    this.x = x;
+                    this.y = y;
+                    this.velX = (Math.random() - 0.5) * 12;
+                    this.velY = (Math.random() - 0.5) * 12;
+                    this.isBurst = true;
+                    this.life = 100;
+                } else {
+                    this.reset();
+                    this.isBurst = false;
+                }
+                
+                this.color = '#ff003c';
+                this.size = Math.random() * 2 + 0.5;
+                this.density = (Math.random() * 30) + 1;
             }
 
             reset() {
-                // Random angle and distance within the circle
                 const angle = Math.random() * Math.PI * 2;
-                const radius = Math.random() * 180; // Keep slightly inside the 200px ring radius
+                const radius = Math.random() * 185;
                 this.x = 250 + Math.cos(angle) * radius;
                 this.y = 250 + Math.sin(angle) * radius;
-                
                 this.baseX = this.x;
                 this.baseY = this.y;
-                this.size = Math.random() * 2 + 1;
-                this.density = (Math.random() * 30) + 1;
-                this.color = '#ff003c';
             }
 
             draw() {
                 ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.isBurst ? (this.life / 100) : 1;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.closePath();
@@ -158,27 +199,28 @@
             }
 
             update() {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let forceDirectionX = dx / distance;
-                let forceDirectionY = dy / distance;
-                let maxDistance = mouse.radius;
-                let force = (maxDistance - distance) / maxDistance;
-                let directionX = forceDirectionX * force * this.density;
-                let directionY = forceDirectionY * force * this.density;
-
-                if (distance < mouse.radius) {
-                    this.x -= directionX;
-                    this.y -= directionY;
+                if (this.isBurst) {
+                    this.x += this.velX;
+                    this.y += this.velY;
+                    this.life -= 2;
                 } else {
-                    if (this.x !== this.baseX) {
-                        let dx = this.x - this.baseX;
-                        this.x -= dx / 10;
-                    }
-                    if (this.y !== this.baseY) {
-                        let dy = this.y - this.baseY;
-                        this.y -= dy / 10;
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < mouse.radius) {
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        this.x -= forceDirectionX * force * this.density;
+                        this.y -= forceDirectionY * force * this.density;
+                    } else {
+                        if (this.x !== this.baseX) {
+                            this.x -= (this.x - this.baseX) / 15;
+                        }
+                        if (this.y !== this.baseY) {
+                            this.y -= (this.y - this.baseY) / 15;
+                        }
                     }
                 }
             }
@@ -196,6 +238,11 @@
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].draw();
                 particlesArray[i].update();
+                
+                if (particlesArray[i].isBurst && particlesArray[i].life <= 0) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                }
             }
             requestAnimationFrame(animate);
         }
@@ -203,11 +250,12 @@
         init();
         animate();
 
-        // Reset mouse when it leaves the canvas area
-        container.addEventListener('mouseleave', function(){
-            mouse.x = null;
-            mouse.y = null;
+        // Clear mouse position when cursor leaves screen
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
         });
     </script>
 </body>
 </html>
+                     
