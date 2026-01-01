@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 body {
@@ -64,7 +64,7 @@ body {
   letter-spacing: 3px;
 }
 
-/* Vertical Nav */
+/* Vertical Nav Buttons */
 .nav {
   position: absolute;
   right: 30px;
@@ -73,20 +73,23 @@ body {
   display: flex;
   flex-direction: column;
   gap: 40px;
+  z-index: 10;
 }
 
-.nav a {
+.nav button {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  text-decoration: none;
+  background: none;
+  border: none;
   color: #fff;
   letter-spacing: 3px;
   font-size: 12px;
+  cursor: pointer;
   opacity: 0.7;
   transition: 0.3s;
 }
 
-.nav a:hover {
+.nav button:hover {
   opacity: 1;
   color: #ff003c;
 }
@@ -105,7 +108,6 @@ body {
   height: 420px;
   border-radius: 50%;
   border: 8px solid #ff003c;
-  filter: blur(1px);
   box-shadow:
     0 0 40px rgba(255,0,60,.8),
     0 0 100px rgba(255,0,60,.4);
@@ -145,7 +147,6 @@ body {
 .social a {
   color: #fff;
   opacity: 0.6;
-  font-size: 14px;
   text-decoration: none;
 }
 
@@ -154,18 +155,54 @@ body {
   color: #ff003c;
 }
 
-/* Responsive */
+/* ===== Sections ===== */
+.section {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.96);
+  backdrop-filter: blur(10px);
+  padding: 80px;
+  display: none;
+  animation: fadeIn .4s ease;
+}
+
+.section.active {
+  display: block;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #ff003c;
+}
+
+.section h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.section p {
+  max-width: 600px;
+  font-size: 16px;
+  line-height: 1.7;
+  opacity: .8;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-  .ring {
-    width: 280px;
-    height: 280px;
-  }
-  .hero-img {
-    width: 220px;
-  }
-  .nav {
-    display: none;
-  }
+  .nav {display: none;}
+  .ring {width: 260px;height:260px;}
+  .hero-img {width:200px;}
+  .section {padding: 40px;}
 }
 </style>
 </head>
@@ -180,21 +217,19 @@ body {
   </div>
 
   <!-- Name -->
-  <div class="name">
-    SHIVA<br />TYAGI
-  </div>
+  <div class="name">SHIVA<br>TYAGI</div>
 
-  <!-- Navigation -->
-  <nav class="nav">
-    <a href="#">ABOUT</a>
-    <a href="#">PROJECTS</a>
-    <a href="#">CONTACT</a>
-  </nav>
+  <!-- Nav Buttons -->
+  <div class="nav">
+    <button onclick="openSection('about')">ABOUT</button>
+    <button onclick="openSection('projects')">PROJECTS</button>
+    <button onclick="openSection('contact')">CONTACT</button>
+  </div>
 
   <!-- Hero -->
   <div class="hero">
     <div class="ring"></div>
-    <img src="hero.jpg" class="hero-img" alt="Hero Image" />
+    <img src="hero.jpg" class="hero-img">
   </div>
 
   <!-- Caption -->
@@ -211,5 +246,52 @@ body {
   </div>
 
 </div>
+
+<!-- ABOUT -->
+<div class="section" id="about">
+  <div class="close" onclick="closeSection()">×</div>
+  <h1>About Me</h1>
+  <p>
+    I’m Shiva Tyagi — a visual-first web designer focused on cinematic,
+    motion-driven, high-impact digital experiences.  
+    I design dark UI, futuristic interfaces, and experimental visuals that
+    blend creativity with technology.
+  </p>
+</div>
+
+<!-- PROJECTS -->
+<div class="section" id="projects">
+  <div class="close" onclick="closeSection()">×</div>
+  <h1>Projects</h1>
+  <p>
+    • Portfolio Websites<br>
+    • Brand Visual Systems<br>
+    • Interactive UI Concepts<br>
+    • Experimental Motion Design
+  </p>
+</div>
+
+<!-- CONTACT -->
+<div class="section" id="contact">
+  <div class="close" onclick="closeSection()">×</div>
+  <h1>Contact</h1>
+  <p>
+    Email: shiva@email.com<br>
+    Instagram: @shiva<br>
+    Available for freelance & collaborations.
+  </p>
+</div>
+
+<script>
+function openSection(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeSection() {
+  document.querySelectorAll('.section').forEach(s =>
+    s.classList.remove('active')
+  );
+}
+</script>
 </body>
 </html>
