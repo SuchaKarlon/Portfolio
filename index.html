@@ -1,178 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shiva Tyagi — Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Portfolio Concept</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<style>
-:root { --red:#ff003c; }
+    <style>
+        /* --- RESET & BASICS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
-body{
-  background:#000;color:#fff;overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevents scrolling to maintain the "App" feel */
+            position: relative;
+        }
 
-/* ===== GENERAL ===== */
-section{min-height:100vh;padding:100px 80px;position:relative}
-h1 span{opacity:0;display:inline-block;animation:reveal .6s forwards}
-@keyframes reveal{to{opacity:1;transform:none}}
+        /* --- UTILITIES --- */
+        .text-red {
+            color: #ff003c;
+        }
 
-/* ===== NAV ===== */
-.nav{
- position:fixed;right:30px;top:50%;transform:translateY(-50%);
- display:flex;flex-direction:column;gap:40px;z-index:10
-}
-.nav button{
- writing-mode:vertical-rl;transform:rotate(180deg);
- background:none;border:none;color:#fff;
- letter-spacing:3px;opacity:.6;cursor:pointer
-}
-.nav button:hover{opacity:1;color:var(--red)}
+        /* --- LAYOUT GRID --- */
+        /* We use absolute positioning to pin elements to the corners, typical of this brutalist style */
 
-/* ===== HERO ===== */
-#hero{display:grid;place-items:center}
-.hero-ring{
- width:420px;height:420px;border:8px solid var(--red);
- border-radius:50%;
- box-shadow:0 0 80px rgba(255,0,60,.6);
- position:absolute
-}
-.hero-img{width:320px;filter:grayscale(1)}
-.hero-caption{
- position:absolute;bottom:100px;left:60px
-}
+        /* 1. TOP LEFT: LOGO */
+        .logo-container {
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+        }
 
-/* ===== PARTICLES ===== */
-canvas{
- position:absolute;inset:0;pointer-events:none
-}
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        /* The decorative line through the logo */
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 1px;
+            background: white;
+            transform: rotate(-45deg);
+        }
 
-/* ===== PROJECTS ===== */
-.projects{
- display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
- gap:30px;margin-top:60px
-}
-.card{
- background:#111;border-radius:16px;
- padding:20px;transition:.4s;cursor:pointer;
- position:relative;overflow:hidden
-}
-.card img{
- width:100%;border-radius:12px;
- opacity:0;position:absolute;inset:0;
- transition:.4s
-}
-.card:hover img{opacity:1}
-.card:hover{
- transform:translateY(-10px);
- box-shadow:0 0 40px rgba(255,0,60,.4)
-}
+        .logo-text {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
 
-/* ===== MOBILE ===== */
-@media(max-width:768px){
- section{padding:80px 30px}
- .nav{display:none}
- .hero-ring{width:260px;height:260px}
- .hero-img{width:200px}
-}
-</style>
+        /* 2. TOP RIGHT: NAME */
+        .top-name {
+            position: absolute;
+            top: 100px;
+            right: 150px; /* Indented slightly from the nav */
+            text-align: left;
+            z-index: 10;
+        }
+
+        .top-name h1 {
+            font-weight: 400;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            line-height: 1.5;
+            color: #dcdcdc;
+            text-transform: uppercase;
+        }
+
+        /* 3. RIGHT SIDE: NAVIGATION */
+        .side-nav {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            z-index: 10;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            /* Rotate text 90 degrees */
+            writing-mode: vertical-rl;
+            transform: rotate(180deg); 
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #ff003c;
+        }
+
+        /* 4. BOTTOM LEFT: ROLE */
+        .role-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50px;
+            z-index: 10;
+        }
+
+        .role-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .role-sub {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        /* 5. BOTTOM RIGHT: SOCIALS */
+        .socials {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            display: flex;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        .socials i {
+            font-size: 1.2rem;
+            color: white; /* Default white */
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        /* Make the Twitter icon red by default as per design, others on hover */
+        .socials i:first-child, 
+        .socials i:hover {
+            color: #ff003c;
+        }
+        
+        .socials i:hover {
+            transform: translateY(-3px);
+        }
+
+        /* --- CENTER STAGE --- */
+        .center-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1; /* Behind UI elements */
+        }
+
+        /* The Red Glowing Ring */
+        .glow-ring {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border: 25px solid #ff003c; /* Thickness of ring */
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 0, 60, 0.4); /* Glow effect */
+            z-index: 1;
+        }
+
+        /* The Figure Image */
+        .hero-image {
+            position: relative;
+            z-index: 2; /* Sits on top of the ring */
+            height: 110%; /* Slightly larger to break the circle bounds */
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%) contrast(1.2); /* Makes image match the moody style */
+            /* Optional: Add a subtle drop shadow to separate from background */
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)) grayscale(100%);
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .side-nav {
+                right: 20px;
+                gap: 30px;
+            }
+            .glow-ring {
+                width: 300px;
+                height: 300px;
+                border-width: 15px;
+            }
+            .hero-image {
+                height: 350px;
+            }
+            .top-name {
+                top: 100px;
+                right: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="nav">
- <button onclick="go('about')">ABOUT</button>
- <button onclick="go('projects')">PROJECTS</button>
- <button onclick="go('contact')">CONTACT</button>
-</div>
+    <div class="logo-container">
+        <div class="logo-icon">A</div>
+        <div class="logo-text"><span class="text-red">A</span>NONYMS</div>
+    </div>
 
-<!-- HERO -->
-<section id="hero">
- <div class="hero-ring"></div>
- <img src="hero.jpg" class="hero-img">
- <div class="hero-caption">
-  <h3>Web Designer</h3>
-  <h3>From <span style="color:var(--red)">IN</span></h3>
- </div>
-</section>
+    <div class="top-name">
+        <h1>Shiva<br>Tyagi</h1>
+    </div>
 
-<!-- ABOUT -->
-<section id="about">
- <canvas id="particles"></canvas>
- <h1 class="animate">About Me</h1>
- <p class="animate" style="max-width:600px;margin-top:20px">
-  I design cinematic, motion-driven web experiences focused on depth,
-  interaction and bold visuals.
- </p>
-</section>
+    <div class="center-stage">
+        <div class="glow-ring"></div>
+        
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3" 
+             alt="Center Figure" 
+             class="hero-image">
+    </div>
 
-<!-- PROJECTS -->
-<section id="projects">
- <canvas id="particles2"></canvas>
- <h1 class="animate">Projects</h1>
+    <nav class="side-nav">
+        <a href="#" class="nav-link">About</a>
+        <a href="#" class="nav-link">Projects</a>
+        <a href="#" class="nav-link">Contact</a>
+    </nav>
 
- <div class="projects">
-  <div class="card">
-   <h3>3D Portfolio</h3>
-   <img src="project1.jpg">
-  </div>
-  <div class="card">
-   <h3>Agency Concept</h3>
-   <img src="project2.jpg">
-  </div>
- </div>
-</section>
+    <div class="role-container">
+        <div class="role-title">Web Designer</div>
+        <div class="role-sub">From <span class="text-red">IN</span></div>
+    </div>
 
-<!-- CONTACT -->
-<section id="contact">
- <canvas id="particles3"></canvas>
- <h1 class="animate">Contact</h1>
- <p class="animate" style="margin-top:20px">
-  shiva@email.com<br>
-  Instagram @shiva
- </p>
-</section>
-
-<script>
-/* ===== NAV SCROLL ===== */
-function go(id){
- document.getElementById(id).scrollIntoView({behavior:"smooth"})
-}
-
-/* ===== TEXT REVEAL ===== */
-document.querySelectorAll('.animate').forEach(el=>{
- let words=el.innerText.split(" ");
- el.innerHTML=words.map((w,i)=>`<span style="animation-delay:${i*80}ms">${w}</span>`).join(" ");
-});
-
-/* ===== PARTICLES ===== */
-function particles(canvas){
- const c=canvas.getContext('2d');
- canvas.width=innerWidth;canvas.height=innerHeight;
- let dots=[...Array(120)].map(()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  r:Math.random()*2+1
- }));
- function draw(){
-  c.clearRect(0,0,canvas.width,canvas.height);
-  dots.forEach(d=>{
-   c.fillStyle="rgba(255,0,60,.6)";
-   c.beginPath();c.arc(d.x,d.y,d.r,0,Math.PI*2);c.fill();
-   d.y+=.3;if(d.y>canvas.height)d.y=0;
-  });
-  requestAnimationFrame(draw)
- }
- draw();
-}
-['particles','particles2','particles3'].forEach(id=>{
- new IntersectionObserver(e=>{
-  if(e[0].isIntersecting)particles(document.getElementById(id))
- }).observe(document.getElementById(id).parentElement)
-})
-</script>
+    <div class="socials">
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-twitch"></i>
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-behance"></i>
+    </div>
 
 </body>
 </html>
