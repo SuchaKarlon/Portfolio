@@ -2,213 +2,214 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Creative Developer Portfolio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Creative developer portfolio with interactive 3D particle systems">
+<title>Shiva Tyagi — Portfolio</title>
 
 <style>
-html,body{
-  margin:0;
-  background:#050505;
-  color:#fff;
-  font-family:Inter,system-ui;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-canvas{
-  position:fixed;
-  inset:0;
-  z-index:-1;
+body {
+  background: #000;
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
 }
 
-section{
-  padding:140px 8vw;
+/* ===== Layout ===== */
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
-h1{
-  font-size:clamp(3rem,6vw,5rem);
-  margin-bottom:60px;
+/* Logo */
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.services{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:40px;
+.logo-circle {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
 }
 
-.card{
-  padding:40px;
-  border-radius:18px;
-  background:rgba(255,255,255,.035);
-  backdrop-filter:blur(10px);
-  cursor:pointer;
-  transition:.4s;
-  position:relative;
+.logo span {
+  color: #ff003c;
+  letter-spacing: 2px;
+  font-size: 14px;
 }
 
-.card:hover{ transform:translateY(-10px); }
-
-.projects{
-  margin-top:160px;
+/* Name */
+.name {
+  position: absolute;
+  top: 35px;
+  right: 60px;
+  text-align: right;
+  color: #ff003c;
+  font-size: 14px;
+  letter-spacing: 3px;
 }
 
-.project-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:30px;
+/* Vertical Nav */
+.nav {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
-.project{
-  padding:30px;
-  border-radius:16px;
-  background:#0b0b0b;
-  transition:.3s;
+.nav a {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-decoration: none;
+  color: #fff;
+  letter-spacing: 3px;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: 0.3s;
 }
 
-.project:hover{ transform:translateY(-6px); }
+.nav a:hover {
+  opacity: 1;
+  color: #ff003c;
+}
+
+/* Hero */
+.hero {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.ring {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  border: 8px solid #ff003c;
+  filter: blur(1px);
+  box-shadow:
+    0 0 40px rgba(255,0,60,.8),
+    0 0 100px rgba(255,0,60,.4);
+}
+
+.hero-img {
+  width: 320px;
+  z-index: 1;
+  filter: grayscale(1) contrast(1.1);
+}
+
+/* Caption */
+.caption {
+  position: absolute;
+  bottom: 120px;
+  left: 60px;
+}
+
+.caption h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.caption span {
+  color: #ff003c;
+}
+
+/* Social */
+.social {
+  position: absolute;
+  bottom: 40px;
+  right: 60px;
+  display: flex;
+  gap: 20px;
+}
+
+.social a {
+  color: #fff;
+  opacity: 0.6;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.social a:hover {
+  opacity: 1;
+  color: #ff003c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ring {
+    width: 280px;
+    height: 280px;
+  }
+  .hero-img {
+    width: 220px;
+  }
+  .nav {
+    display: none;
+  }
+}
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<canvas id="scene"></canvas>
-
-<section>
-  <h1 id="title">Creative Developer</h1>
-
-  <div class="services">
-    <div class="card" data-icon="figma">UI / UX Design</div>
-    <div class="card" data-icon="react">Interactive Web</div>
-    <div class="card" data-icon="three">3D Experiences</div>
+  <!-- Logo -->
+  <div class="logo">
+    <div class="logo-circle">A</div>
+    <span>ANONYMS</span>
   </div>
 
-  <div class="projects">
-    <h1>Selected Work</h1>
-    <div class="project-grid">
-      <div class="project">Portfolio Website</div>
-      <div class="project">Netflix UI Clone</div>
-      <div class="project">3D Landing Page</div>
-    </div>
+  <!-- Name -->
+  <div class="name">
+    SHIVA<br />TYAGI
   </div>
-</section>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#">ABOUT</a>
+    <a href="#">PROJECTS</a>
+    <a href="#">CONTACT</a>
+  </nav>
 
-<script>
-/* ---------------- SETUP ---------------- */
-const canvas=document.getElementById("scene");
-const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  <!-- Hero -->
+  <div class="hero">
+    <div class="ring"></div>
+    <img src="hero.jpg" class="hero-img" alt="Hero Image" />
+  </div>
 
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
-camera.position.z=6;
+  <!-- Caption -->
+  <div class="caption">
+    <h3>Web Designer</h3>
+    <h3>From <span>IN</span></h3>
+  </div>
 
-/* ---------------- BLOOM ---------------- */
-const composer=new THREE.EffectComposer(renderer);
-composer.addPass(new THREE.RenderPass(scene,camera));
-composer.addPass(new THREE.UnrealBloomPass(
-  new THREE.Vector2(innerWidth,innerHeight),
-  innerWidth<768?0.4:0.7,
-  0.6,
-  0.1
-));
+  <!-- Social -->
+  <div class="social">
+    <a href="#">TW</a>
+    <a href="#">IG</a>
+    <a href="#">BE</a>
+  </div>
 
-/* ---------------- PARTICLES ---------------- */
-const COUNT=innerWidth<768?900:1600;
-const geo=new THREE.BufferGeometry();
-const pos=new Float32Array(COUNT*3);
-const base=[];
-for(let i=0;i<COUNT;i++){
-  const x=(Math.random()-.5)*6;
-  const y=(Math.random()-.5)*6;
-  const z=(Math.random()-.5)*2;
-  pos.set([x,y,z],i*3);
-  base.push({x,y,z});
-}
-geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
-
-const mat=new THREE.PointsMaterial({
-  size:.045,
-  color:0x8a8aff,
-  transparent:true,
-  opacity:.9,
-  blending:THREE.AdditiveBlending
-});
-
-const points=new THREE.Points(geo,mat);
-scene.add(points);
-
-let current=base;
-
-/* ---------------- BRAND SVG ICONS ---------------- */
-const ICONS={
-  figma:"M20 0 H60 A20 20 0 0 1 60 40 H20 Z",
-  react:"M50 10 C80 10 80 90 50 90 C20 90 20 10 50 10 Z",
-  three:"M10 50 H90 M50 10 V90"
-};
-
-function svgToPoints(path,origin){
-  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("viewBox","0 0 100 100");
-  const p=document.createElementNS("http://www.w3.org/2000/svg","path");
-  p.setAttribute("d",path);
-  svg.appendChild(p);
-  document.body.appendChild(svg);
-  const length=p.getTotalLength();
-
-  const pts=[];
-  for(let i=0;i<COUNT;i++){
-    const pt=p.getPointAtLength((i/COUNT)*length);
-    pts.push({
-      x:(pt.x-50)/20+origin.x,
-      y:(50-pt.y)/20+origin.y,
-      z:0
-    });
-  }
-  document.body.removeChild(svg);
-  return pts;
-}
-
-/* ---------------- LOCALIZED HOVER ---------------- */
-document.querySelectorAll(".card").forEach(card=>{
-  card.addEventListener("mouseenter",()=>{
-    const rect=card.getBoundingClientRect();
-    const ox=(rect.left+rect.width/2-innerWidth/2)/120;
-    const oy=-(rect.top+rect.height/2-innerHeight/2)/120;
-    current=svgToPoints(ICONS[card.dataset.icon],{x:ox,y:oy});
-  });
-  card.addEventListener("mouseleave",()=>current=base);
-});
-
-/* ---------------- SCROLL DEPTH ---------------- */
-let scrollZ=0;
-addEventListener("scroll",()=>scrollZ=scrollY*.0004);
-
-/* ---------------- ANIMATE ---------------- */
-function animate(){
-  requestAnimationFrame(animate);
-  const a=geo.attributes.position.array;
-  for(let i=0;i<COUNT;i++){
-    a[i*3]+= (current[i].x-a[i*3])*.06;
-    a[i*3+1]+= (current[i].y-a[i*3+1])*.06;
-    a[i*3+2]+= ((current[i].z+scrollZ)-a[i*3+2])*.05;
-  }
-  geo.attributes.position.needsUpdate=true;
-  composer.render();
-}
-animate();
-
-addEventListener("resize",()=>{
-  renderer.setSize(innerWidth,innerHeight);
-  composer.setSize(innerWidth,innerHeight);
-  camera.aspect=innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-});
-</script>
-
+</div>
 </body>
 </html>
