@@ -9,13 +9,8 @@
 
     <style>
         /* --- RESET & LAYOUT --- */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Hide cursor only on desktop devices */
         @media (min-width: 1025px) {
             * { cursor: none; }
         }
@@ -32,26 +27,23 @@
 
         .text-red { color: #ff003c; }
 
-        /* --- PARALLAX BACKGROUND GRID --- */
+        /* --- PARALLAX BACKGROUND --- */
         #parallax-bg {
             position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
+            top: -10%; left: -10%; width: 120%; height: 120%;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 60px 60px;
             z-index: 0;
             pointer-events: none;
+            transition: transform 0.1s ease-out;
         }
 
-        /* --- CUSTOM CURSOR (Hidden on Mobile) --- */
+        /* --- CUSTOM CURSOR --- */
         #custom-cursor {
             position: fixed;
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             border: 2px solid #ff003c;
             border-radius: 50%;
             pointer-events: none;
@@ -59,57 +51,62 @@
             z-index: 9999;
             transition: width 0.2s, height 0.2s, background-color 0.2s;
             box-shadow: 0 0 10px #ff003c;
-            display: none; /* Shown via JS if desktop */
+            display: none;
         }
 
-        /* --- UI ELEMENTS --- */
-        .logo-container { position: absolute; top: 30px; left: 30px; display: flex; align-items: center; gap: 10px; z-index: 10; }
+        /* --- UI OVERLAYS --- */
+        .logo-container { position: absolute; top: 30px; left: 30px; display: flex; align-items: center; gap: 10px; z-index: 100; }
         .logo-icon { width: 35px; height: 35px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 800; position: relative; }
         .logo-icon::after { content: ''; position: absolute; width: 120%; height: 1px; background: white; transform: rotate(-45deg); }
-        .logo-text { font-size: 0.8rem; letter-spacing: 2px; font-weight: 600; }
-
-        .top-name { position: absolute; top: 80px; right: 30px; z-index: 10; text-align: right; }
-        .glitch {
-            font-weight: 400;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #dcdcdc;
-            position: relative;
-            line-height: 1.3;
-        }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8;
-        }
-        .glitch.active::before { animation: glitch-anim 0.3s infinite; color: #ff003c; z-index: -1; }
-        .glitch.active::after { animation: glitch-anim 0.3s reverse infinite; color: #fff; z-index: -2; }
         
-        @keyframes glitch-anim {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            100% { transform: translate(0); }
+        .top-name { position: absolute; top: 35px; right: 30px; z-index: 100; text-align: right; }
+        .glitch { font-weight: 400; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: #dcdcdc; position: relative; }
+
+        /* --- NAVIGATION BUTTONS --- */
+        .side-nav { 
+            position: absolute; right: 40px; top: 50%; transform: translateY(-50%); 
+            display: flex; flex-direction: column; gap: 60px; z-index: 100; 
+        }
+        
+        /* Turning text into Buttons */
+        .nav-btn { 
+            text-decoration: none; 
+            color: #fff; 
+            font-size: 0.8rem; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            writing-mode: vertical-rl; 
+            transform: rotate(180deg); 
+            transition: 0.3s ease;
+            padding: 10px 5px;
+            border: 1px solid transparent;
+            display: block;
         }
 
-        /* --- NAVIGATION --- */
-        .side-nav { 
-            position: absolute; right: 30px; top: 50%; transform: translateY(-50%); 
-            display: flex; flex-direction: column; gap: 40px; z-index: 10; 
+        .nav-btn:hover {
+            color: #ff003c;
+            border-right: 1px solid #ff003c;
+            text-shadow: 0 0 10px #ff003c;
         }
-        .nav-link { 
-            text-decoration: none; color: white; font-size: 0.7rem; letter-spacing: 2px; 
-            text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); 
-            transition: 0.3s; 
+
+        /* --- MOBILE MENU BUTTON --- */
+        .menu-toggle {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 101;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
         }
 
         /* --- FOOTER --- */
         .role-container { position: absolute; bottom: 30px; left: 30px; z-index: 10; }
-        .role-title { font-size: 1rem; font-weight: 700; }
-        .role-sub { font-size: 0.8rem; color: #888; }
-
         .socials { position: absolute; bottom: 30px; right: 30px; display: flex; gap: 20px; z-index: 10; }
         .socials i { font-size: 1rem; color: white; transition: 0.3s; }
+        .socials i:hover { color: #ff003c; transform: scale(1.2); }
 
         /* --- CENTER STAGE --- */
         .center-stage {
@@ -130,16 +127,25 @@
         @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
 
-        /* --- MOBILE RESPONSIVE FIXES --- */
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
-            .top-name { right: auto; left: 30px; top: 120px; text-align: left; }
-            .side-nav { 
-                right: 30px; top: auto; bottom: 100px; transform: none; 
-                flex-direction: row; writing-mode: horizontal-tb; 
+            .menu-toggle { display: block; }
+            .top-name { display: none; } /* Hide name on mobile to clean up space */
+            .side-nav {
+                position: fixed;
+                top: 0; right: -100%; width: 100%; height: 100vh;
+                background: rgba(0,0,0,0.95);
+                justify-content: center; align-items: center;
+                transition: 0.5s;
+                transform: none;
             }
-            .nav-link { writing-mode: horizontal-tb; transform: none; font-size: 0.6rem; }
-            .glow-ring { border-width: 6px; }
-            .socials { gap: 15px; }
+            .side-nav.active { right: 0; }
+            .nav-btn { 
+                writing-mode: horizontal-tb; 
+                transform: none; 
+                font-size: 1.5rem; 
+                margin: 20px 0;
+            }
         }
     </style>
 </head>
@@ -148,13 +154,15 @@
     <div id="parallax-bg"></div>
     <div id="custom-cursor"></div>
 
+    <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+
     <div class="logo-container">
         <div class="logo-icon">A</div>
         <div class="logo-text"><span class="text-red">A</span>NONYMS</div>
     </div>
 
     <div class="top-name">
-        <h1 class="glitch" id="glitch-name" data-text="SHIVA TYAGI">SHIVA<br>TYAGI</h1>
+        <h1 class="glitch" id="glitch-name" data-text="SHIVA TYAGI">SHIVA TYAGI</h1>
     </div>
 
     <div class="center-stage" id="container">
@@ -162,10 +170,10 @@
         <canvas id="particleCanvas"></canvas>
     </div>
 
-    <nav class="side-nav">
-        <a class="nav-link magnetic">About</a>
-        <a class="nav-link magnetic">Projects</a>
-        <a class="nav-link magnetic">Contact</a>
+    <nav class="side-nav" id="side-nav">
+        <a href="about.html" class="nav-btn magnetic">About</a>
+        <a href="projects.html" class="nav-btn magnetic">Projects</a>
+        <a href="contact.html" class="nav-btn magnetic">Contact</a>
     </nav>
 
     <div class="role-container">
@@ -174,157 +182,112 @@
     </div>
 
     <div class="socials">
-        <i class="fab fa-twitter magnetic"></i>
-        <i class="fab fa-twitch magnetic"></i>
-        <i class="fab fa-facebook-f magnetic"></i>
-        <i class="fab fa-behance magnetic"></i>
+        <a href="#"><i class="fab fa-twitter magnetic"></i></a>
+        <a href="#"><i class="fab fa-twitch magnetic"></i></a>
+        <a href="#"><i class="fab fa-facebook-f magnetic"></i></a>
+        <a href="#"><i class="fab fa-behance magnetic"></i></a>
     </div>
 
     <script>
+        // --- SELECTORS ---
         const cursor = document.getElementById('custom-cursor');
-        const parallaxBg = document.getElementById('parallax-bg');
-        const nameElement = document.getElementById('glitch-name');
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideNav = document.getElementById('side-nav');
+        const magneticElements = document.querySelectorAll('.magnetic');
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
-        const magneticElements = document.querySelectorAll('.magnetic');
-        
-        // Dynamic Canvas Sizing
-        function resize() {
-            const size = Math.min(window.innerWidth * 0.9, 500);
-            canvas.width = size;
-            canvas.height = size;
-        }
-        window.addEventListener('resize', resize);
-        resize();
 
-        // Detect Touch
+        // --- MOBILE MENU LOGIC ---
+        menuToggle.addEventListener('click', () => {
+            sideNav.classList.toggle('active');
+            menuToggle.querySelector('i').classList.toggle('fa-bars');
+            menuToggle.querySelector('i').classList.toggle('fa-times');
+        });
+
+        // --- MOUSE & MAGNETIC PHYSICS ---
         const isTouchDevice = 'ontouchstart' in window;
         if (!isTouchDevice) cursor.style.display = 'block';
 
-        // Mouse/Touch Interaction
-        const handleMove = (e) => {
-            const x = e.touches ? e.touches[0].clientX : e.clientX;
-            const y = e.touches ? e.touches[0].clientY : e.clientY;
-
+        window.addEventListener('mousemove', (e) => {
             if (!isTouchDevice) {
-                cursor.style.left = x + 'px';
-                cursor.style.top = y + 'px';
-                
-                // Parallax (Desktop Only)
-                const pX = (x - window.innerWidth / 2) * -0.02; 
-                const pY = (y - window.innerHeight / 2) * -0.02;
-                parallaxBg.style.transform = `translate(${pX}px, ${pY}px)`;
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
 
-                // Magnetic
+                // Magnetic Pull for buttons
                 magneticElements.forEach(el => {
                     const rect = el.getBoundingClientRect();
-                    const dX = x - (rect.left + rect.width / 2);
-                    const dY = y - (rect.top + rect.height / 2);
-                    if (Math.sqrt(dX*dX + dY*dY) < 80) {
-                        el.style.transform = `translate(${dX * 0.3}px, ${dY * 0.3}px)`;
+                    const dX = e.clientX - (rect.left + rect.width / 2);
+                    const dY = e.clientY - (rect.top + rect.height / 2);
+                    if (Math.sqrt(dX*dX + dY*dY) < 100) {
+                        el.style.transform = `translate(${dX * 0.4}px, ${dY * 0.4}px)`;
                     } else {
                         el.style.transform = `translate(0, 0)`;
                     }
                 });
             }
-
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = x - rect.left;
-            mouse.y = y - rect.top;
-        };
-
-        window.addEventListener('mousemove', handleMove);
-        window.addEventListener('touchmove', handleMove);
-
-        const handleDown = (e) => {
-            const x = e.touches ? e.touches[0].clientX : e.clientX;
-            const y = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            if (!isTouchDevice) {
-                cursor.style.width = '40px';
-                cursor.style.height = '40px';
-                cursor.style.backgroundColor = 'rgba(255, 0, 60, 0.2)';
-            }
-
-            const rect = canvas.getBoundingClientRect();
-            for (let i = 0; i < 20; i++) {
-                particlesArray.push(new Particle(x - rect.left, y - rect.top, true));
-            }
-        };
-
-        window.addEventListener('mousedown', handleDown);
-        window.addEventListener('touchstart', handleDown);
-
-        window.addEventListener('mouseup', () => {
-            cursor.style.width = '20px'; cursor.style.height = '20px';
-            cursor.style.backgroundColor = 'transparent';
         });
 
-        // Glitch
-        function triggerGlitch() {
-            nameElement.classList.add('active');
-            setTimeout(() => nameElement.classList.remove('active'), 500);
-            setTimeout(triggerGlitch, Math.random() * 4000 + 2000);
-        }
-        triggerGlitch();
-
-        // Particles
+        // --- PARTICLE ENGINE ---
         let particlesArray = [];
         const mouse = { x: null, y: null, radius: 80 };
+        
+        function resize() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
         class Particle {
-            constructor(x, y, isBurst = false) {
-                if (isBurst) {
-                    this.x = x; this.y = y;
-                    this.velX = (Math.random() - 0.5) * 10;
-                    this.velY = (Math.random() - 0.5) * 10;
-                    this.isBurst = true; this.life = 100;
-                } else {
-                    this.reset(); this.isBurst = false;
-                }
+            constructor() {
+                this.reset();
                 this.color = '#ff003c';
                 this.size = Math.random() * 2 + 0.5;
-                this.density = (Math.random() * 25) + 1;
+                this.density = (Math.random() * 20) + 1;
             }
             reset() {
                 const angle = Math.random() * Math.PI * 2;
-                const radius = Math.random() * (canvas.width * 0.38);
-                this.x = (canvas.width/2) + Math.cos(angle) * radius;
-                this.y = (canvas.height/2) + Math.sin(angle) * radius;
+                const radius = Math.random() * (canvas.width * 0.35);
+                this.x = canvas.width/2 + Math.cos(angle) * radius;
+                this.y = canvas.height/2 + Math.sin(angle) * radius;
                 this.baseX = this.x; this.baseY = this.y;
+            }
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < mouse.radius) {
+                    this.x -= (dx/dist) * (mouse.radius - dist) / mouse.radius * this.density;
+                    this.y -= (dy/dist) * (mouse.radius - dist) / mouse.radius * this.density;
+                } else {
+                    this.x -= (this.x - this.baseX) / 10;
+                    this.y -= (this.y - this.baseY) / 10;
+                }
             }
             draw() {
                 ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.isBurst ? (this.life / 100) : 1;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
-            update() {
-                if (this.isBurst) {
-                    this.x += this.velX; this.y += this.velY; this.life -= 3;
-                } else {
-                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < mouse.radius) {
-                        this.x -= (dx/dist) * (mouse.radius - dist) / mouse.radius * this.density;
-                        this.y -= (dy/dist) * (mouse.radius - dist) / mouse.radius * this.density;
-                    } else {
-                        this.x -= (this.x - this.baseX) / 15; this.y -= (this.y - this.baseY) / 15;
-                    }
-                }
-            }
+        }
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < 150; i++) particlesArray.push(new Particle());
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (particlesArray.length < 120) particlesArray.push(new Particle());
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].draw(); particlesArray[i].update();
-                if (particlesArray[i].isBurst && particlesArray[i].life <= 0) {
-                    particlesArray.splice(i, 1); i--;
-                }
-            }
+            particlesArray.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animate);
         }
+
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        init();
         animate();
     </script>
 </body>
