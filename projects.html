@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Shiva Tyagi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND --- */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            text-decoration: none;
+            color: #ff003c;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { transform: translateX(-5px); }
+
+        /* --- PROJECTS GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- PROJECT CARD --- */
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card:hover {
+            border-color: #ff003c;
+            background: rgba(255, 0, 60, 0.05);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.2);
+        }
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ff003c;
+        }
+        .project-card p {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .tags {
+            display: flex;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .view-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #ff003c;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <header>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home</a>
+        <div class="logo-text">SHIVA <span class="text-red">TYAGI</span></div>
+    </header>
+
+    <div class="container">
+        <h1 class="section-title">Web <span class="text-red">Projects</span></h1>
+
+        <div class="project-grid">
+            <div class="project-card">
+                <h3>Cyber Interface</h3>
+                <p>An interactive landing page with custom particle physics and neon design elements.</p>
+                <div class="tags"><span>HTML</span> | <span>CSS</span> | <span>JS</span></div>
+                <a href="#" class="view-link">View Project</a>
+            </div>
+
+            <div class="project-card">
+                <h3>E-Commerce Dark</h3>
+                <p>A minimalist luxury store front-end with smooth scroll and glassmorphism UI.</p>
+                <div class="tags"><span>React</span> | <span>Framer Motion</span></div>
+                <a href="#" class="view-link">View Project</a>
+            </div>
+
+            <div class="project-card">
+                <h3>Crypto Dashboard</h3>
+                <p>A real-time data visualization dashboard featuring dark mode and high-contrast charts.</p>
+                <div class="tags"><span>API</span> | <span>Chart.js</span></div>
+                <a href="#" class="view-link">View Project</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
