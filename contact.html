@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Shiva Tyagi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #000; color: #fff; font-family: 'Montserrat', sans-serif; min-height: 100vh; }
+        .bg-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 50px 50px; z-index: -1; }
+        header { padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { text-decoration: none; color: #ff003c; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .info-side h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .detail-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-decoration: none; color: #ccc; transition: 0.3s; }
+        .detail-item:hover { color: #ff003c; }
+        .detail-item i { color: #ff003c; width: 20px; }
+        form { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 5px; outline: none; }
+        input:focus { border-color: #ff003c; }
+        .btn { width: 100%; padding: 15px; background: #ff003c; border: none; color: #fff; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 5px; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <header>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+        <div>CONTACT <span class="text-red">SHIVA</span></div>
+    </header>
+    <div class="container">
+        <div class="info-side">
+            <h2>Let's <span class="text-red">Connect.</span></h2>
+            <div class="contact-details">
+                <a href="mailto:Shivatyagi525au@gmail.com" class="detail-item"><i class="fas fa-envelope"></i> Shivatyagi525au@gmail.com</a>
+                <a href="https://wa.me/916396330249" class="detail-item"><i class="fab fa-whatsapp"></i> +91 6396330249</a>
+                <a href="https://www.linkedin.com/in/shiva-tyagi-mahraipur-654482302" class="detail-item"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                <a href="https://www.instagram.com/sucha_karlon" class="detail-item"><i class="fab fa-instagram"></i> @sucha_karlon</a>
+                <a href="https://github.com/SuchaKarlon" class="detail-item"><i class="fab fa-github"></i> GitHub: SuchaKarlon</a>
+                <div class="detail-item"><i class="fas fa-map-marker-alt"></i> Muzaffarnagar, UP, India</div>
+            </div>
+        </div>
+        <form>
+            <input type="text" placeholder="Name" required>
+            <input type="email" placeholder="Email" required>
+            <textarea rows="5" placeholder="Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>
